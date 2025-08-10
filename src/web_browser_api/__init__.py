@@ -12,6 +12,8 @@ __all__ = [
     "type_like_human", "human_pause", "move_mouse",
     "get_element_center", "click_element", "click_and_hold_element",
     "click_and_hold_pos", "extract_text_from_chrome_window",
+    # debug helpers
+    "get_current_tab_url", "get_page_source",
 ]
 
 # Lazy attribute access (PEP 562): import submodules only when a symbol is first used.
@@ -33,6 +35,9 @@ _def_to_module = {
     "click_and_hold_element": ".api",
     "click_and_hold_pos": ".api",
     "extract_text_from_chrome_window": ".api",
+    # debug
+    "get_current_tab_url": ".debug_functions",
+    "get_page_source": ".debug_functions",
 }
 
 def __getattr__(name):
