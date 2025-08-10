@@ -3,7 +3,7 @@ import shutil
 import undetected_chromedriver as uc
 
 PROFILE_PATH = os.path.expanduser("~/selenium/chrome-profile")
-driver:uc.Chrome = None
+driver: uc.Chrome | None = None
 
 def nuke_chrome_profile():
     """

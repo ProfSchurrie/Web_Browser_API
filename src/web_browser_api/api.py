@@ -4,8 +4,8 @@ import time
 import pyautogui
 from faker import Faker
 import undetected_chromedriver as uc
-from src.driver import get_driver
-from src.move_mouse import _move_mouse_poly
+from .driver import get_driver
+from .move_mouse import _move_mouse_poly
 import subprocess
 import pytesseract
 

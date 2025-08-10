@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "web-browser-api"
+version = "0.1.0"
+description = "Human-like browser automation helpers built on undetected-chromedriver, Selenium, and PyAutoGUI."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Soeren" }]
+license = { file = "LICENSE" }
+keywords = ["selenium", "chromedriver", "automation", "pyautogui", "undetected-chromedriver"]
+dependencies = [
+  "undetected-chromedriver",
+  "faker",
+  "pyautogui",
+  "pytesseract",
+  "pyscreeze",
+  "selenium",
+  "numpy",
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Operating System :: OS Independent",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/web_browser_api"]
+
+[project.urls]
+Homepage = "https://example.com/web-browser-api"

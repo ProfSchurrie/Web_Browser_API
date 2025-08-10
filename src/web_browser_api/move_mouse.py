@@ -17,9 +17,9 @@ if sys.platform.startswith("java"):
     # from . import _pyautogui_java as platformModule
     raise NotImplementedError("Jython is not yet supported by PyAutoGUI.")
 elif sys.platform == "darwin":
-    from . import _pyautogui_osx as platformModule
+    from pyautogui import _pyautogui_osx as platformModule
 elif sys.platform == "win32":
-    from . import _pyautogui_win as platformModule
+    from pyautogui import _pyautogui_win as platformModule
 elif platform.system() == "Linux":
     from pyautogui import _pyautogui_x11 as platformModule
 else:
