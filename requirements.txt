@@ -1,0 +1,7 @@
+selenium
+undetected_chromedriver
+pyautogui
+faker
+pytesseract
+pyscreeze
+numpy
