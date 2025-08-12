@@ -1,11 +1,14 @@
 import random
+import shutil
 import string
+import sys
 import time
 import pyautogui
 from faker import Faker
 import undetected_chromedriver as uc
 from .driver import get_driver
 from .move_mouse import _move_mouse_poly
+from ._keyboard import _xkb_query, _xkb_apply, _switch_to_us
 import subprocess
 import pytesseract
 
@@ -45,19 +48,35 @@ def generate_bot_identity():
 
 
 def type_like_human(text):
-    """Type text into the currently focused element as real keypresses.
-    - Sends characters using OS-level key events via pyautogui.
-    - Adds small random delays to mimic human typing.
     """
-    for char in text:
-        if char == "\n":
-            pyautogui.press("enter")
-        elif char == "\t":
-            pyautogui.press("tab")
-        else:
-            # write handles upper/lower case and special characters
-            pyautogui.write(char)
-        time.sleep(random.uniform(0.05, 0.15))
+    Type text into the currently focused element as real keypresses.
+    Temporarily switches keyboard layout to US and restores afterwards.
+    """
+    if sys.platform != "linux":
+        raise RuntimeError("This layout switcher currently supports Linux/X11 only.")
+    if not shutil.which("setxkbmap"):
+        raise RuntimeError("setxkbmap not found. Install it (e.g., sudo apt install x11-xkb-utils).")
+
+    original = _xkb_query()
+    try:
+        _switch_to_us()
+        time.sleep(0.15)  # tiny settle time after layout change
+
+        for char in text:
+            if char == "\n":
+                pyautogui.press("enter")
+            elif char == "\t":
+                pyautogui.press("tab")
+            else:
+                pyautogui.write(char)  # US layout: Shift+2 = @, etc.
+            time.sleep(random.uniform(0.05, 0.15))
+    finally:
+        try:
+            _xkb_apply(original)
+        except Exception as e:
+            # Don’t crash on restore; print a helpful hint instead
+            print(f"[WARN] Failed to restore keyboard layout: {e}. "
+                  f"You can manually restore with: setxkbmap {original.get('layout','us')}")
 
 def human_pause(min_sec=0.3, max_sec=1.2):
     time.sleep(random.uniform(min_sec, max_sec))
