@@ -62,8 +62,8 @@ def type_like_human(text):
 def human_pause(min_sec=0.3, max_sec=1.2):
     time.sleep(random.uniform(min_sec, max_sec))
 
-def move_mouse(driver:uc.Chrome, x, y, total_dur=1.5, jitter=8, titlebar_h=108):
-    _move_mouse_poly(driver, x, y, total_dur=total_dur, titlebar_h=titlebar_h)
+def move_mouse(driver:uc.Chrome, x, y, total_dur=1.5, titlebar_h=108, x_offset=20):
+    _move_mouse_poly(driver, x, y, total_dur=total_dur, titlebar_h=titlebar_h, x_offset=x_offset)
 
 
 def get_element_center(element):
@@ -77,20 +77,20 @@ def get_element_center(element):
 
     return center_x, center_y
 
-def click_element(driver, element):
+def click_element(driver, element, titlebar_h=108, x_offset=20):
     (posx, posy) = get_element_center(element)
-    move_mouse(driver, posx, posy)
+    move_mouse(driver, posx, posy, titlebar_h=titlebar_h, x_offset=x_offset)
     pyautogui.click()
 
-def click_and_hold_element(driver, element, seconds=2):
+def click_and_hold_element(driver, element, seconds=2, titlebar_h=108, x_offset=20):
     posx, posy = get_element_center(element)
-    move_mouse(driver, posx, posy)
+    move_mouse(driver, posx, posy, titlebar_h=titlebar_h, x_offset=x_offset)
     pyautogui.mouseDown()         # press and hold
     time.sleep(seconds)           # hold for s seconds
     pyautogui.mouseUp()           # release
 
-def click_and_hold_pos(driver, pos, seconds=2, break_func=None):
-    move_mouse(driver, pos[0], pos[1])
+def click_and_hold_pos(driver, pos, seconds=2, break_func=None, titlebar_h=108, x_offset=20):
+    move_mouse(driver, pos[0], pos[1], titlebar_h=titlebar_h, x_offset=x_offset)
     pyautogui.mouseDown()         # press and hold
     if break_func is not None:
         for i in range(seconds*3):

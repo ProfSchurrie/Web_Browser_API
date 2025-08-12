@@ -312,7 +312,7 @@ def _paths(coeffsX, coeffsY, t):
 
 # ---------- main mover ----------
 def _move_mouse_poly(driver, dest_x, dest_y,
-                    total_dur=0.45, titlebar_h=80):
+                    total_dur=0.45, titlebar_h=80, x_offset=20):
     """
     Move the real cursor from its current position to (dest_x, dest_y) inside
     the browser window, following a randomised quartic path.
@@ -323,7 +323,7 @@ def _move_mouse_poly(driver, dest_x, dest_y,
     """
     # 1) Window offset → translate page coords → absolute screen coords
     win_pos   = driver.get_window_position()
-    abs_dest  = (int(win_pos["x"] + dest_x +20),
+    abs_dest  = (int(win_pos["x"] + dest_x + x_offset),
                  int(win_pos["y"] + titlebar_h + dest_y))
 
     print("abs_dest ", abs_dest)
