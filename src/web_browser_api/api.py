@@ -36,6 +36,20 @@ def open_new_tab(driver, url="about:blank"):
     return new_tab
 
 
+def close_current_tab(driver, switch_to_last: bool = True):
+    """
+    Closes the currently active tab.
+
+    :param driver: The Selenium WebDriver instance
+    :param switch_to_last: If True, switch focus to the last remaining tab
+    """
+    driver.close()
+
+    # If there are tabs left and we want to switch, do so
+    if driver.window_handles and switch_to_last:
+        driver.switch_to.window(driver.window_handles[-1])
+
+
 def focus_chrome_window():
     # This will search for a Chrome window and activate it
     subprocess.run(["xdotool", "search", "--onlyvisible", "--class", "chrome", "windowactivate"])
