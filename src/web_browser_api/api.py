@@ -22,6 +22,20 @@ def switch_to_latest_tab(driver):
         print(f"Error switching tabs: {e}")
 
 
+def open_new_tab(driver, url="about:blank"):
+    """Open a new tab, switch to it, and return its window handle."""
+    # Open a new tab with given URL
+    driver.execute_script(f"window.open('{url}');")
+
+    # The newest tab is always the last one in window_handles
+    new_tab = driver.window_handles[-1]
+
+    # Switch to the new tab
+    driver.switch_to.window(new_tab)
+
+    return new_tab
+
+
 def focus_chrome_window():
     # This will search for a Chrome window and activate it
     subprocess.run(["xdotool", "search", "--onlyvisible", "--class", "chrome", "windowactivate"])
