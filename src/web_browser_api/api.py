@@ -58,7 +58,22 @@ def generate_bot_identity():
     last_name = fake.last_name()
     username = f"{first_name.lower()}.{last_name.lower()}" + ''.join(random.choices(string.digits, k=8))
     password = generate_password()
-    return {"first_name": first_name, "last_name": last_name, "username": username, "password": password}
+
+    # Faker provides random dates of birth
+    birthdate_obj = fake.date_of_birth(minimum_age=18, maximum_age=80)
+    birthdate = {
+        "year": birthdate_obj.year,
+        "month": birthdate_obj.month,
+        "day": birthdate_obj.day
+    }
+
+    return {
+        "first_name": first_name,
+        "last_name": last_name,
+        "username": username,
+        "password": password,
+        "birthdate": birthdate
+    }
 
 
 def type_like_human(text):
