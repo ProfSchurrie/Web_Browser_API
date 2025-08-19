@@ -6,6 +6,10 @@ import time
 import pyautogui
 from faker import Faker
 import undetected_chromedriver as uc
+from selenium.common import TimeoutException, WebDriverException
+from selenium.webdriver import Keys
+from selenium.webdriver.support.wait import WebDriverWait
+
 from .driver import get_driver
 from .move_mouse import _move_mouse_poly
 from ._keyboard import _xkb_query, _xkb_apply, _switch_to_us
@@ -22,18 +26,38 @@ def switch_to_latest_tab(driver):
         print(f"Error switching tabs: {e}")
 
 
-def open_new_tab(driver, url="about:blank"):
-    """Open a new tab, switch to it, and return its window handle."""
-    # Open a new tab with given URL
-    driver.execute_script(f"window.open('{url}');")
+def open_new_tab(driver, url="about:blank", timeout=5):
+    """
+    Open a new tab in a Chrome session, switch to it, and return its handle.
+    Uses Selenium 4 API first, then keyboard chord, then JS anchor fallback.
+    """
+    old_handles = set(driver.window_handles)
 
-    # The newest tab is always the last one in window_handles
-    new_tab = driver.window_handles[-1]
+    # 1) Preferred: Selenium 4 (not blocked by popup blockers)
+    try:
+        driver.switch_to.new_window('tab')
+        if url and url != "about:blank":
+            driver.get(url)
+        return driver.current_window_handle
+    except WebDriverException:
+        pass
 
-    # Switch to the new tab
-    driver.switch_to.window(new_tab)
+    # 2) Fallback: keyboard shortcut (CTRL/⌘ + t)
+    try:
+        active = driver.switch_to.active_element
+        # Try CTRL first (Windows/Linux)
+        active.send_keys(Keys.CONTROL + 't')
+        WebDriverWait(driver, timeout).until(lambda d: len(set(d.window_handles) - old_handles) == 1)
+    except TimeoutException:
+        # Try COMMAND (macOS)
+        active.send_keys(Keys.COMMAND + 't')
+        WebDriverWait(driver, timeout).until(lambda d: len(set(d.window_handles) - old_handles) == 1)
 
-    return new_tab
+    new_handle = list(set(driver.window_handles) - old_handles)[0]
+    driver.switch_to.window(new_handle)
+    if url and url != "about:blank":
+        driver.get(url)
+    return new_handle
 
 
 def close_current_tab(driver, switch_to_last: bool = True):
